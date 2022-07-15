@@ -48,11 +48,11 @@ router.post('/login', (request, response) => {
                             const token = jwt.sign({
                                 name: result.name,
                                 id: result._id
-                            }, process.env.TOKEN_SECRET)
+                            }, process.env.TOKEN_SECRET, { expiresIn: 2000 })
 
                             response
-                            .header('auth-token', token)
-                            .json({ message: 'Usuario Autenticado' })
+                                .header('auth-token', token)
+                                .json({ message: 'Usuario Autenticado' })
                         } else {
                             response.json({ message: 'Password incorrecto' })
                         }
