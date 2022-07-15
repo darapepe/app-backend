@@ -1,6 +1,7 @@
 const express = require('express')
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const router = express.Router()
 
@@ -32,6 +33,33 @@ router.post('/register', (request, response) => {
                     .catch(error => response.json({ message: error }))
             } else {
                 response.json({ message: 'Correo ya se encuentra registrado' })
+            }
+        })
+        .catch(error => response.json({ message: error }))
+})
+
+router.post('/login', (request, response) => {
+    User.findOne({ email: request.body.email })
+        .then(result => {
+            if (result != null) {
+                bcrypt.compare(request.body.password, result.password)
+                    .then(auth => {
+                        if (auth) {
+                            const token = jwt.sign({
+                                name: result.name,
+                                id: result._id
+                            }, process.env.TOKEN_SECRET)
+
+                            response
+                            .header('auth-token', token)
+                            .json({ message: 'Usuario Autenticado' })
+                        } else {
+                            response.json({ message: 'Password incorrecto' })
+                        }
+                    })
+                    .catch(error => response.json({ message: error }))
+            } else {
+                response.json({ message: 'El correo no se encuentra' })
             }
         })
         .catch(error => response.json({ message: error }))
