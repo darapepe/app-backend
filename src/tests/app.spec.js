@@ -13,16 +13,12 @@ afterAll((done) => {
 
 describe("Obtener respuesta erronea al recurso de bienvenida", () => {
   test("Respuesta 404 estado de la peticios", async () => {
-    const response = await request(app)
-    .get("/")
-    .send();
+    const response = await request(app).get("/").send();
     expect(response.statusCode).toBe;
   });
 
   test("Respuesta error no existe token", async () => {
-    const response = await request(app)
-    .get("/")
-    .send();
+    const response = await request(app).get("/").send();
     expect(response.body.error).toBe("No existe token en la peticion");
   });
 
@@ -40,26 +36,22 @@ describe("Obtener respuesta erronea al recurso de bienvenida", () => {
 
 describe("Obtener respuestas exitosas de bienvenida", () => {
   test("Respuesta 200 al registrar un usuario", async () => {
-    const response = await request(app)
-    .post("/api/user/register")
-    .send({
+    const response = await request(app).post("/api/user/register").send({
       name: "Test 1",
       email: "test@gmail.com",
-      password: "isabelmaria",
+      password: "isabelmaria"
     });
     expect(response.statusCode).toBe;
   });
 
   test("Verificacion usuario registrado", async () => {
-    const response = await request(app)
-    .post("/api/user/register")
-    .send({
+    const response = await request(app).post("/api/user/register").send({
       name: "Test 1",
       email: "test@gmail.com",
-      password: "password",
+      password: "password"
     });
 
-    const { message, id } = response.body;
+    const { message, _id } = response.body;
 
     if (message) {
       expect(message).toBe("Correo ya se encuentra registrado");
@@ -67,4 +59,31 @@ describe("Obtener respuestas exitosas de bienvenida", () => {
       expect(_id).toBeDefined();
     }
   });
+
+  test("obtener token (login exitoso)", async () => {
+    const response = await request(app).post("/api/user/login").send({
+      email: "perez.donaldo@gmail.com",
+      password: "isabelmaria"
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const { message } = response.body;
+
+    expect(message).toBe('Usuario Autenticado')
+
+    token = response.headers['token']
+  });
+
+  test('obtener mensaje de bienvenida', async () => {
+    const response = await request(app)
+      .get('/')
+      .set({ token: token })
+      .send()
+
+    const { message } = response.body
+
+    expect(message).toBe('Bienvenido!!!')
+
+  })
 });
