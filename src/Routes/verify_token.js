@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 const verify_token = (request, response, next) => {
-    const token = request.header('auth-token')
+    const token = request.header('token')
     if (!token) return response.status(404).json({ error: 'No existe token en la peticion' })
 
     try {
