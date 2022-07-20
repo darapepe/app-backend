@@ -13,12 +13,16 @@ afterAll((done) => {
 
 describe("Obtener respuesta erronea al recurso de bienvenida", () => {
   test("Respuesta 404 estado de la peticios", async () => {
-    const response = await request(app).get("/").send();
+    const response = await request(app)
+    .get("/")
+    .send();
     expect(response.statusCode).toBe;
   });
 
   test("Respuesta error no existe token", async () => {
-    const response = await request(app).get("/").send();
+    const response = await request(app)
+    .get("/")
+    .send();
     expect(response.body.error).toBe("No existe token en la peticion");
   });
 
@@ -36,7 +40,9 @@ describe("Obtener respuesta erronea al recurso de bienvenida", () => {
 
 describe("Obtener respuestas exitosas de bienvenida", () => {
   test("Respuesta 200 al registrar un usuario", async () => {
-    const response = await request(app).post("/api/user/register").send({
+    const response = await request(app)
+    .post("/api/user/register")
+    .send({
       name: "Test 1",
       email: "test@gmail.com",
       password: "isabelmaria",
@@ -45,7 +51,9 @@ describe("Obtener respuestas exitosas de bienvenida", () => {
   });
 
   test("Verificacion usuario registrado", async () => {
-    const response = await request(app).post("/api/user/register").send({
+    const response = await request(app)
+    .post("/api/user/register")
+    .send({
       name: "Test 1",
       email: "test@gmail.com",
       password: "password",
